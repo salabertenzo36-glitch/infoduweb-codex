@@ -132,6 +132,7 @@ $$(".counter").forEach(el => cio.observe(el));
 (function () {
   let queued = false;
   const heroContent = $(".hero-content"), heroVideo = $(".hero-video"), fg = $(".foot-giant");
+  const navEl = $("#nav");
   const bar = $("#readProgress i");
   addEventListener("scroll", () => {
     if (queued) return; queued = true;
@@ -139,6 +140,7 @@ $$(".counter").forEach(el => cio.observe(el));
       queued = false;
       const h = document.documentElement, y = h.scrollTop;
       if (bar) bar.style.width = (y / (h.scrollHeight - h.clientHeight || 1) * 100) + "%";
+      if (navEl) navEl.classList.toggle("scrolled", y > 40);
       if (REDUCED) return;
       if (heroContent && y < innerHeight * 1.2) {
         heroContent.style.transform = `translateY(${y * .13}px)`;
