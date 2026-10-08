@@ -23,6 +23,14 @@ const STATS = {
 };
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const escA = s => esc(s).replace(/"/g, "&quot;");
+/* meta description : 155 caracs max, coupée à une limite de mot */
+const meta = (d, max = 155) => {
+  d = String(d);
+  if (d.length <= max) return d;
+  const cut = d.slice(0, max - 1);
+  const sp = cut.lastIndexOf(" ");
+  return (sp > 40 ? cut.slice(0, sp) : cut) + "…";
+};
 function highlight(code, lang) {
   const h = esc(code);
   lang = (lang || "").toLowerCase();
@@ -371,7 +379,7 @@ for (const a of ALL) {
   const url = artUrl(a);
   add(`article/${a.id}/index.html`, layout({
     title: `${a.title} — CODEX`,
-    desc: a.excerpt.length > 155 ? a.excerpt.slice(0, 152) + "…" : a.excerpt,
+    desc: meta(a.excerpt),
     url, active: "", body: articleBody(a), page: { type: "article", id: a.id }, ogType: "article",
     scripts: ["/data.js", "/app.js"]
   }).replace("</head>", jsonld(a, url) + "\n</head>"), a.updated, "0.8");
@@ -448,7 +456,7 @@ for (const [k, c] of Object.entries(CATS)) {
 /* légal */
 for (const [k, d] of Object.entries(LEGAL)) {
   add(`legal/${k}/index.html`, layout({
-    title: `${d.title} — CODEX`, desc: d.lede.length > 155 ? d.lede.slice(0, 152) + "…" : d.lede,
+    title: `${d.title} — CODEX`, desc: meta(d.lede),
     url: `/legal/${k}/`, active: "", body: `<div class="wrap article-layout">
       <aside class="toc"><div class="mono overline">SOMMAIRE</div>
         <div id="tocLinks">${d.sections.map((s, i) => `<a href="#sec-${i}" data-sec="${i}">${String(i + 1).padStart(2, "0")} · ${s.h}</a>`).join("")}</div>
