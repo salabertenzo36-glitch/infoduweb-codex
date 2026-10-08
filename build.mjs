@@ -18,7 +18,7 @@ const TOTAL = ALL.length;
 const STATS = {
   pages: TOTAL,
   langages: ALL.filter(a => a.cat === "langage").length,
-  menaces: ALL.filter(a => a.cat === "cyber").length,
+  menaces: ALL.filter(a => a.cat === "cyber" && a.danger >= 2).length,
   extraits: ALL.reduce((s, a) => s + a.sections.filter(x => x.code).length, 0)
 };
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
