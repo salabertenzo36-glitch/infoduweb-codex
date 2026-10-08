@@ -54,7 +54,7 @@ function cardHTML(a, i) {
     <span class="idx">${String(i + 1).padStart(2, "0")} — ${CATS[a.cat] ? CATS[a.cat].name : ""}</span>
     <h3><a href="${artUrl(a)}">${a.title}</a></h3>
     <p>${a.excerpt}</p>
-    <div>${badge(a)}</div>
+    <div>${badge(a)}${a.read <= 2 ? '<span class="badge">Synthèse</span>' : ""}</div>
     <div class="card-foot"><span class="meta-row">◷ ${a.read} MIN</span>${lvl(a.level)}</div>
   </article>`;
 }
@@ -238,7 +238,7 @@ function homeBody() {
       <div class="ghost" aria-hidden="true">RAYONS</div>
       <div><div class="mono overline reveal">01 — RAYONNAGES</div>
       <h2 class="h2 reveal" data-decode>Cinq rayons.<br><span class="serif-it">Des dizaines</span> de fiches.</h2></div>
-      <p class="sect-desc reveal">Cinq portes d'entrée vers des fiches rédigées et relues. Sobre en surface, profond dedans.</p>
+      <p class="sect-desc reveal">Cinq portes d'entrée vers des fiches rédigées avec l'aide de l'IA, relecture en cours. Sobre en surface, profond dedans.</p>
     </section>
     <section class="rails" id="rails">${rails}</section>
     <section class="band"><div class="wrap has-ghost">
@@ -328,7 +328,7 @@ function articleBody(a) {
       <article class="article" id="articleBody">
         <div class="crumb"><a href="/">CODEX</a> / <a href="/categorie/${a.cat}/">${cat.name.toUpperCase()}</a> / ${esc(a.title.toUpperCase())}</div>
         <h1>${a.title}</h1>
-        <div class="art-meta">${badge(a)}<span class="meta-row">MAJ ${a.updated} · ${(a.tags || []).map(t => "#" + t).join(" ")}</span></div>
+        <div class="art-meta">${badge(a)}${a.read <= 2 ? '<span class="badge">Synthèse</span>' : ""}<span class="meta-row">MAJ ${a.updated} · ${(a.tags || []).map(t => "#" + t).join(" ")}</span></div>
         <p class="lede">${a.excerpt}</p>
         ${a.danger >= 3 ? `<div class="warn">⚠ <b>Fiche danger.</b> Contenu documenté à but <b>défensif</b>. Toute attaque non autorisée contre un système est illégale (art. 323-1 et s. Code pénal).</div>` : ""}
         ${a.sections.map((s, i) => `
@@ -336,7 +336,7 @@ function articleBody(a) {
           <div>${s.body}</div>
           ${s.code ? `<div class="codeblock"><div class="cb-head"><span>◉ ${s.code.lang}</span><button class="copy">COPIER</button></div><pre><code>${highlight(s.code.code, s.code.lang)}</code></pre></div>` : ""}
         `).join("")}
-        <div class="tip">✔ <b>Fiche suivante conseillée :</b> ${a.parent && byId(a.parent) ? `relisez la fiche <a href="${artUrl(byId(a.parent))}"><u>${byId(a.parent).title}</u></a> puis explorez les fiches liées ci-dessous.` : "explorez les fiches liées ci-dessous pour ancrer le sujet."}</div>
+        ${a.parent && byId(a.parent) ? `<div class="tip">✔ <b>Pour aller plus loin :</b> relisez la fiche <a href="${artUrl(byId(a.parent))}"><u>${byId(a.parent).title}</u></a>.</div>` : ""}
         ${(a.sources || []).length ? `<div class="sources"><div class="mono overline">SOURCES VÉRIFIABLES</div><ul>${a.sources.map(s => `<li><a href="${s.u}" target="_blank" rel="noopener">↗ ${s.t}</a></li>`).join("")}</ul></div>` : ""}
       </article>
     </div>
@@ -364,7 +364,7 @@ add("index.html", layout({
   title: "InfoDuWeb CODEX — L'encyclopédie du code & de la cybersécurité",
   desc: `CODEX : ${fmt(TOTAL)} fiches claires sur Python, JavaScript, Rust, XSS, ransomware, Docker, Linux… Exemples, niveaux et parades.`,
   url: "/", active: "home", body: homeBody(), page: { type: "home" }, ogType: "website"
-}), "2026-10-08", "1.0");
+}), "2026-10-09", "1.0");
 
 /* articles */
 for (const a of ALL) {
@@ -388,7 +388,7 @@ for (const [k, c] of Object.entries(CATS)) {
       <p class="sect-desc">${c.desc} (${fmt(list.length)} pages)</p></div>
       <div class="wrap"><div class="cards-grid">${list.map(cardHTML).join("")}</div></div>`,
     page: { type: "category" }
-  }), "2026-10-08", "0.6");
+  }), "2026-10-09", "0.6");
 }
 
 /* explorer */
@@ -404,7 +404,7 @@ for (const [k, c] of Object.entries(CATS)) {
       <div class="wrap"><div id="explorerGrid" class="cards-grid">${ALL.map(cardHTML).join("")}</div>
       <div class="mono center dim" id="explorerCount">${fmt(ALL.length)} FICHES AFFICHÉES / ${fmt(TOTAL)} AU TOTAL</div></div>`,
     page: { type: "explorer" }
-  }), "2026-10-08", "0.6");
+  }), "2026-10-09", "0.6");
 }
 
 /* index A-Z */
@@ -427,7 +427,7 @@ for (const [k, c] of Object.entries(CATS)) {
             <small>◷ ${a.read} MIN</small>
           </a>`).join("")}</div>`).join("")}</div></div>`,
     page: { type: "index" }
-  }), "2026-10-08", "0.6");
+  }), "2026-10-09", "0.6");
 }
 
 /* menaces */
@@ -442,7 +442,7 @@ for (const [k, c] of Object.entries(CATS)) {
       <p class="sect-desc">Failles et attaques documentées pour s'en défendre. Triées par criticité.</p></div>
       <div class="wrap"><div class="cards-grid">${list.map(cardHTML).join("")}</div></div>`,
     page: { type: "menaces" }
-  }), "2026-10-08", "0.6");
+  }), "2026-10-09", "0.6");
 }
 
 /* légal */
