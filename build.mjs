@@ -236,12 +236,6 @@ function homeBody() {
       <span>ENCYCLOPÉDIE VIVANTE — CODE · CYBER · SYSTÈME · RÉSEAU · ALGORITHMES —&nbsp;</span>
       <span>ENCYCLOPÉDIE VIVANTE — CODE · CYBER · SYSTÈME · RÉSEAU · ALGORITHMES —&nbsp;</span>
     </div></div>
-    <section class="band"><div class="wrap"><div class="stats" id="statsGrid">
-      <div class="stat reveal"><b><span class="counter" data-to="${STATS.pages}">${fmt(STATS.pages)}</span></b><span class="mono">pages indexées</span><small>fiches uniques</small></div>
-      <div class="stat reveal"><b><span class="counter" data-to="${STATS.langages}">${fmt(STATS.langages)}</span></b><span class="mono">langages couverts</span><small>de Python à Rust</small></div>
-      <div class="stat reveal"><b><span class="counter" data-to="${STATS.menaces}">${fmt(STATS.menaces)}</span></b><span class="mono">menaces documentées</span><small>du phishing au zero-day</small></div>
-      <div class="stat reveal"><b><span class="counter" data-to="${STATS.extraits}">${fmt(STATS.extraits)}</span></b><span class="mono">extraits de code</span><small>copiables en 1 clic</small></div>
-    </div></div></section>
     <section class="wrap sect-head has-ghost">
       <div class="ghost" aria-hidden="true">RAYONS</div>
       <div><div class="mono overline reveal">01 — RAYONNAGES</div>
