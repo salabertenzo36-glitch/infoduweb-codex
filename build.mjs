@@ -23,12 +23,22 @@ const STATS = {
 };
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const escA = s => esc(s).replace(/"/g, "&quot;");
-function highlight(code) {
-  let h = esc(code);
-  h = h.replace(/(&quot;|&quot|&#39;|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, '<span class="s">$1</span>');
-  h = h.replace(/(^|\s)(#[^\n]*|\/\/[^\n]*|&lt;!--[\s\S]*?--&gt;)/gm, '$1<span class="c">$2</span>');
-  h = h.replace(/\b(const|let|var|function|return|if|else|for|while|import|from|export|class|def|print|SELECT|FROM|WHERE|await|async|new|include|package|func|type|fn|use|pub|int|void|COPY|RUN|WORKDIR|CMD|USER)\b/g, '<span class="k">$1</span>');
-  return h;
+function highlight(code, lang) {
+  const h = esc(code);
+  lang = (lang || "").toLowerCase();
+  let comment;
+  if (lang === "html") comment = "&lt;!--[\\s\\S]*?--&gt;";
+  else if (lang === "css") comment = "/\\*[\\s\\S]*?\\*/";
+  else if (/^(python|ruby|bash|dockerfile|shell)$/.test(lang)) comment = "#[^\\n]*";
+  else if (lang === "sql") comment = "(?:--[^\\n]*|/\\*[\\s\\S]*?\\*/)";
+  else comment = "(?://[^\\n]*|/\\*[\\s\\S]*?\\*/)";
+  const re = new RegExp("(" + comment + ")|(\"(?:[^\"\\\\]|\\\\.)*\"|'(?:[^'\\\\]|\\\\.)*')|\\b(const|let|var|function|return|if|else|for|while|import|from|export|class|def|print|SELECT|FROM|WHERE|await|async|new|include|package|func|type|fn|use|pub|int|void|COPY|RUN|WORKDIR|CMD|USER)\\b", "g");
+  return h.replace(re, (m, cmt, str, kw) => {
+    if (cmt) return '<span class="c">' + cmt + "</span>";
+    if (str) return '<span class="s">' + str + "</span>";
+    if (kw) return '<span class="k">' + kw + "</span>";
+    return m;
+  });
 }
 function lvl(n) { let s = '<span class="lvl">'; for (let i = 1; i <= 5; i++) s += `<i class="${i <= n ? "on" : ""}"></i>`; return s + "</span>"; }
 function badge(a) {
@@ -88,7 +98,7 @@ function footer() {
       <div class="foot-brand">
         <div class="foot-logo">InfoDuWeb<span>.</span>CODEX</div>
         <p>Encyclopédie indépendante du code & de la cybersécurité. Écrite pour les curieux, les devs, les pentesters et les insomniaques du terminal.</p>
-        <div class="mono dim">CONTACT — <a href="mailto:contact@infoduweb-codex.pages.dev" style="text-decoration:underline">contact@infoduweb-codex.pages.dev</a></div>
+        <div class="mono dim">CONTACT — <a href="https://github.com/salabertenzo36-glitch/infoduweb-codex/issues" style="text-decoration:underline">Signaler une erreur (GitHub)</a></div>
         <div class="mono dim"><span class="total-dynamic">${fmt(TOTAL)} PAGES</span> · 5 RAYONS · ERREURS BIENVENUES VIA LE CONTACT CI-DESSOUS</div>
       </div>
       <div class="foot-col"><div class="mono overline">RAYONS</div>
@@ -324,7 +334,7 @@ function articleBody(a) {
         ${a.sections.map((s, i) => `
           <h2 id="sec-${i}">${s.h}</h2>
           <div>${s.body}</div>
-          ${s.code ? `<div class="codeblock"><div class="cb-head"><span>◉ ${s.code.lang}</span><button class="copy">COPIER</button></div><pre><code>${highlight(s.code.code)}</code></pre></div>` : ""}
+          ${s.code ? `<div class="codeblock"><div class="cb-head"><span>◉ ${s.code.lang}</span><button class="copy">COPIER</button></div><pre><code>${highlight(s.code.code, s.code.lang)}</code></pre></div>` : ""}
         `).join("")}
         <div class="tip">✔ <b>Fiche suivante conseillée :</b> ${a.parent && byId(a.parent) ? `relisez la fiche <a href="${artUrl(byId(a.parent))}"><u>${byId(a.parent).title}</u></a> puis explorez les fiches liées ci-dessous.` : "explorez les fiches liées ci-dessous pour ancrer le sujet."}</div>
         ${(a.sources || []).length ? `<div class="sources"><div class="mono overline">SOURCES VÉRIFIABLES</div><ul>${a.sources.map(s => `<li><a href="${s.u}" target="_blank" rel="noopener">↗ ${s.t}</a></li>`).join("")}</ul></div>` : ""}
