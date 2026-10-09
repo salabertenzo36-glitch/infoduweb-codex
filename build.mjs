@@ -150,8 +150,6 @@ function layout({ title, desc, url, active, body, page = {}, ogType = "website",
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
-<div id="cursorDot" aria-hidden="true"></div>
-<div id="cursorRing" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 <div id="readProgress" aria-hidden="true"><i></i></div>
 ${nav(active)}
@@ -210,7 +208,6 @@ function homeBody() {
           <span class="line outline" data-split>TOUS LES DANGERS.</span>
           <span class="line"><em data-split>UNE SEULE</em> <span class="serif-it" data-split>encyclopédie.</span></span>
         </h1>
-        <div class="rotator mono reveal" aria-hidden="true"><span class="rot-label">À l'affiche —</span><span class="rot-window"><span id="rotWord">PYTHON</span></span></div>
         <div class="hero-sub">
           <p class="reveal">Le Wikipédia du code & de la cybersécurité — Python, JavaScript, TypeScript, C#, C++, Rust, failles XSS, ransomware, OSINT… ${fmt(TOTAL)} fiches claires, avec exemples, niveaux & parades.</p>
           <div class="hero-cta reveal">
@@ -232,19 +229,13 @@ function homeBody() {
       <span>PYTHON ✦ JAVASCRIPT ✦ TYPESCRIPT ✦ C# ✦ C++ ✦ RUST ✦ GO ✦ XSS ✦ SQL INJECTION ✦ PHISHING ✦ RANSOMWARE ✦ DOCKER ✦ LINUX ✦ OSINT ✦&nbsp;</span>
       <span>PYTHON ✦ JAVASCRIPT ✦ TYPESCRIPT ✦ C# ✦ C++ ✦ RUST ✦ GO ✦ XSS ✦ SQL INJECTION ✦ PHISHING ✦ RANSOMWARE ✦ DOCKER ✦ LINUX ✦ OSINT ✦&nbsp;</span>
     </div></div>
-    <div class="marquee marquee-ghost" aria-hidden="true"><div class="marquee-track">
-      <span>ENCYCLOPÉDIE VIVANTE — CODE · CYBER · SYSTÈME · RÉSEAU · ALGORITHMES —&nbsp;</span>
-      <span>ENCYCLOPÉDIE VIVANTE — CODE · CYBER · SYSTÈME · RÉSEAU · ALGORITHMES —&nbsp;</span>
-    </div></div>
-    <section class="wrap sect-head has-ghost">
-      <div class="ghost" aria-hidden="true">RAYONS</div>
+    <section class="wrap sect-head">
       <div><div class="mono overline reveal">01 — RAYONNAGES</div>
       <h2 class="h2 reveal" data-decode>Cinq rayons.<br><span class="serif-it">Des dizaines</span> de fiches.</h2></div>
       <p class="sect-desc reveal">Cinq portes d'entrée vers des fiches rédigées avec l'aide de l'IA, relecture en cours. Sobre en surface, profond dedans.</p>
     </section>
     <section class="rails" id="rails">${rails}</section>
-    <section class="band"><div class="wrap has-ghost">
-      <div class="ghost" aria-hidden="true">SÉLECTION</div>
+    <section class="band"><div class="wrap">
       <div class="sect-head"><div><div class="mono overline reveal">02 — À LA UNE</div>
       <h2 class="h2 reveal" data-decode>Fiches <span class="serif-it">fondatrices.</span></h2></div>
       <a href="/explorer/" class="btn-ghost magnetic">Tout explorer →</a></div>
@@ -255,21 +246,18 @@ function homeBody() {
       <p id="manifestoText">On ne vous vend pas du rêve néon. On documente le réel : comment le code fonctionne, comment il casse, comment on l'attaque — et comment on le protège. Chaque fiche va à l'essentiel en quelques minutes, avec du code concret et des parades documentées.</p>
       <div class="manifesto-foot mono"><span>— la rédaction CODEX</span><span>LECTURE ≈ 2 À 5 MIN / FICHE</span></div>
     </div></section>
-    <section class="band"><div class="hazard" aria-hidden="true"></div><div class="wrap has-ghost">
-      <div class="ghost" aria-hidden="true">DANGER</div>
+    <section class="band"><div class="hazard" aria-hidden="true"></div><div class="wrap">
       <div class="sect-head"><div><div class="mono overline reveal">03 — SALLE DES DANGERS</div>
       <h2 class="h2 reveal" data-decode>La cyber, <span class="danger-word">sans filtre.</span></h2></div>
       <a href="/menaces/" class="btn-ghost magnetic">Cartographie complète →</a></div>
       <div id="threatList" class="threat-list">${threatRows}</div>
     </div></section>
-    <section class="wrap has-ghost">
-      <div class="ghost" aria-hidden="true">CODE</div>
+    <section class="wrap">
       <div class="sect-head"><div><div class="mono overline reveal">04 — LANGAGES</div>
       <h2 class="h2 reveal" data-decode>Parlez <span class="serif-it">machine couramment.</span></h2></div></div>
       <div id="langGrid" class="lang-grid">${langCells}</div>
     </section>
     <section class="labo">
-      <div class="labo-orbs" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
       <div class="wrap labo-inner">
         <div><div class="mono overline light reveal">05 — EN DIRECT DU LABO</div>
         <h2 class="h2 light reveal" data-decode>La machine ne dort jamais.</h2>
@@ -278,12 +266,10 @@ function homeBody() {
         <div class="terminal reveal" role="log" aria-label="Dernières vulnérabilités du NIST">
           <div class="term-head"><i></i><i></i><i></i><span class="mono">labo — nvd</span></div>
           <div class="term-body" id="termBody"><div class="ln-dim"><span class="p">$</span>connexion à services.nvd.nist.gov…</div></div>
-          <div class="term-line"><span class="prompt">$</span><span id="termCurrent"></span><span class="caret"></span></div>
         </div>
       </div>
     </section>
     <section class="index-cta">
-      <div class="rings" aria-hidden="true"></div>
       <div class="wrap index-cta-inner"><div>
         <div class="mono overline">06 — INDEX A–Z</div>
         <div class="giant">A<span>→</span>Z</div>
@@ -292,16 +278,12 @@ function homeBody() {
       </div><div class="az-mini" id="azMini">${az}</div></div>
     </section>
     <section class="interlude">
-      <img class="interlude-bg" src="/assets/fibres.webp" alt="" aria-hidden="true" loading="lazy">
-      <div class="interlude-veil" aria-hidden="true"></div>
       <div class="wrap">
         <div class="mono overline light reveal">NOTE DE FOND</div>
         <blockquote class="reveal">« Comprendre le code, c'est comprendre le monde qui l'exécute. Comprendre l'attaque, c'est apprendre à le défendre. »</blockquote>
-        <div class="mono dim reveal interlude-cap">FIG. 07 — NAPPES DE FIBRES · FOND ANIMÉ</div>
       </div>
     </section>
-    <section class="band"><div class="wrap faq has-ghost">
-      <div class="ghost" aria-hidden="true">FAQ</div>
+    <section class="band"><div class="wrap faq">
       <div class="mono overline reveal">07 — QUESTIONS DU LABO</div>
       <h2 class="h2 reveal" data-decode>On vous dit tout.</h2>
       <div class="faq-list reveal">

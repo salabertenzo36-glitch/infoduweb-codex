@@ -27,78 +27,6 @@ setInterval(() => {
 /* ── THÈME ── */
 { const b = $("#themeToggle"); if (b) b.onclick = () => { const h = document.documentElement; h.dataset.theme = h.dataset.theme === "nuit" ? "papier" : "nuit"; }; }
 
-/* ── CURSEUR + MAGNÉTIQUE ── */
-(function () {
-  const dot = $("#cursorDot"), ring = $("#cursorRing");
-  if (!dot || !ring) return;
-  let x = 0, y = 0, rx = 0, ry = 0;
-  addEventListener("mousemove", e => { x = e.clientX; y = e.clientY; dot.style.left = x + "px"; dot.style.top = y + "px"; });
-  (function loop() { rx += (x - rx) * .16; ry += (y - ry) * .16; ring.style.left = rx + "px"; ring.style.top = ry + "px"; requestAnimationFrame(loop); })();
-  document.addEventListener("mouseover", e => {
-    if (e.target.closest && e.target.closest("a,button,.card,.threat,.rail")) ring.classList.add("on"); else ring.classList.remove("on");
-  });
-  $$(".magnetic").forEach(el => {
-    el.addEventListener("mousemove", e => { const r = el.getBoundingClientRect();
-      el.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .1}px,${(e.clientY - r.top - r.height / 2) * .1}px)`; });
-    el.addEventListener("mouseleave", () => el.style.transform = "");
-  });
-})();
-
-/* ── SPLIT HERO (immédiat, non bloquant) ── */
-(function splitHero() {
-  $$("[data-split]").forEach((el, i) => {
-    const txt = el.textContent; el.textContent = "";
-    [...txt].forEach((ch, j) => {
-      const s = document.createElement("span"); s.className = "char"; s.textContent = ch === " " ? "\u00A0" : ch;
-      s.style.animationDelay = (i * .25 + j * .022) + "s"; el.appendChild(s);
-    });
-  });
-})();
-
-/* ── ROTATOR (mots issus du corpus) ── */
-(function () {
-  const el = $("#rotWord"); if (!el || REDUCED) return;
-  const words = ["PYTHON", "RUST", "XSS", "HTTP", "DOCKER", "AUTHENTIFICATION", "LINUX", "TYPESCRIPT", "PHISHING", "SQL"];
-  if (!words.length) return;
-  let i = 0;
-  setInterval(() => {
-    el.classList.add("out");
-    setTimeout(() => {
-      i = (i + 1) % words.length;
-      el.textContent = words[i];
-      el.classList.add("pre");
-      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove("out", "pre")));
-    }, 460);
-  }, 2300);
-})();
-
-/* ── DÉCODE ── */
-(function () {
-  const CHARS = "░▒▓█01#/\\|";
-  const els = $$("[data-decode]");
-  if (!els.length) return;
-  const dio = new IntersectionObserver(es => es.forEach(e => {
-    if (!e.isIntersecting) return; dio.unobserve(e.target); decode(e.target);
-  }), { threshold: .4 });
-  els.forEach(el => { el.dataset.html = el.innerHTML; dio.observe(el); });
-  function decode(el) {
-    const full = el.textContent, html = el.dataset.html;
-    if (REDUCED || full.length < 3) return;
-    let f = 0; const total = Math.max(26, full.length * 2);
-    const iv = setInterval(() => {
-      f++;
-      const done = Math.floor(full.length * f / total);
-      let out = "";
-      for (let i = 0; i < full.length; i++) {
-        const ch = full[i];
-        out += (ch.trim() === "" || i < done) ? ch : CHARS[Math.floor(Math.random() * CHARS.length)];
-      }
-      el.textContent = out;
-      if (f >= total) { clearInterval(iv); el.innerHTML = html; }
-    }, 30);
-  }
-})();
-
 /* ── REVEAL + COMPTEURS + MANIFESTE ── */
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
 $$(".reveal:not(.in)").forEach(el => io.observe(el));
@@ -131,7 +59,6 @@ $$(".counter").forEach(el => cio.observe(el));
 /* ── SCROLL GLOBAL : progress + parallax + footer ── */
 (function () {
   let queued = false;
-  const heroContent = $(".hero-content"), heroVideo = $(".hero-video"), fg = $(".foot-giant");
   const navEl = $("#nav");
   const bar = $("#readProgress i");
   addEventListener("scroll", () => {
@@ -141,23 +68,14 @@ $$(".counter").forEach(el => cio.observe(el));
       const h = document.documentElement, y = h.scrollTop;
       if (bar) bar.style.width = (y / (h.scrollHeight - h.clientHeight || 1) * 100) + "%";
       if (navEl) navEl.classList.toggle("scrolled", y > 40);
-      if (REDUCED) return;
-      if (heroContent && y < innerHeight * 1.2) {
-        heroContent.style.transform = `translateY(${y * .13}px)`;
-        if (heroVideo) heroVideo.style.transform = `translateY(${y * .07}px)`;
-      }
-      if (fg) {
-        const d = Math.min(Math.max(innerHeight - fg.getBoundingClientRect().top, 0), 1400);
-        fg.style.transform = `translateX(${-d * .08}px)`;
-      }
     });
   }, { passive: true });
 })();
 
-/* ── TERMINAL LABO : CVE réelles (NIST NVD), repli éditorial ── */
+/* ── TERMINAL LABO : CVE réelles (NIST NVD), affichage statique ── */
 (function () {
-  const body = $("#termBody"), cur = $("#termCurrent"), src = $("#laboSource");
-  if (!body || !cur) return;
+  const body = $("#termBody"), src = $("#laboSource");
+  if (!body) return;
   const FALLBACK = [
     { t: "veille éditoriale — 5 dossiers chauds", c: "ln-dim" },
     { t: "XSS : innerHTML + entrée utilisateur = faille", c: "" },
@@ -166,7 +84,7 @@ $$(".counter").forEach(el => cio.observe(el));
     { t: "phishing : passkeys > mots de passe", c: "ln-ok" },
     { t: "zero-day : patcher < 48 h après correctif", c: "ln-warn" }
   ];
-  let lines = [], li = 0, ci = 0, started = false, runId = 0;
+  let started = false;
   const CACHE_KEY = "codex-cve-cache", CACHE_TTL = 24 * 3600 * 1000;
   function readCache() {
     try {
@@ -179,24 +97,15 @@ $$(".counter").forEach(el => cio.observe(el));
     try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), items })); } catch (e) {}
   }
   function day(ts) { try { return new Date(ts).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" }); } catch (e) { return ""; } }
-  function push(text, cls) {
-    const d = document.createElement("div");
-    if (cls) d.className = cls;
-    d.textContent = "$ " + text;
-    body.appendChild(d);
-    while (body.children.length > 6) body.removeChild(body.firstChild);
-  }
-  function tick(my) {
-    if (my !== runId) return;
-    const line = lines[li]; if (!line) return;
-    if (ci <= line.t.length) { cur.textContent = line.t.slice(0, ci); ci++; setTimeout(() => tick(my), 20); }
-    else { push(line.t, line.c); cur.textContent = ""; li = (li + 1) % lines.length; ci = 0; setTimeout(() => tick(my), 700); }
-  }
-  function start(data, label) {
-    lines = data; li = 0; ci = 0; runId++;
+  function render(data, label) {
+    body.innerHTML = "";
+    data.slice(0, 8).forEach(l => {
+      const d = document.createElement("div");
+      if (l.c) d.className = l.c;
+      d.textContent = "$ " + l.t;
+      body.appendChild(d);
+    });
     if (src) src.textContent = label;
-    if (REDUCED) { body.innerHTML = ""; data.forEach(l => push(l.t, l.c)); cur.textContent = ""; return; }
-    body.innerHTML = ""; tick(runId);
   }
   async function live() {
     try {
@@ -214,18 +123,18 @@ $$(".counter").forEach(el => cio.observe(el));
       }).filter(x => x.t.length > 12);
       if (!items.length) throw 0;
       writeCache(items);
-      start(items, "SOURCE : NIST NVD · TEMPS RÉEL");
-    } catch (e) { start(FALLBACK, "SOURCE : NIST NVD · HORS-LIGNE — VEILLE ÉDITORIALE"); }
+      render(items, "SOURCE : NIST NVD · TEMPS RÉEL");
+    } catch (e) { render(FALLBACK, "SOURCE : NIST NVD · HORS-LIGNE — VEILLE ÉDITORIALE"); }
   }
   new IntersectionObserver((es, obs) => es.forEach(e => {
     if (e.isIntersecting && !started) {
       started = true; obs.disconnect();
       const cached = readCache();
       if (cached) {
-        start(cached.items, "SOURCE : NIST NVD · CACHE LOCAL DU " + day(cached.ts));
+        render(cached.items, "SOURCE : NIST NVD · CACHE LOCAL DU " + day(cached.ts));
         live();
       } else {
-        start(FALLBACK, "CONNEXION AU NIST…");
+        render(FALLBACK, "CONNEXION AU NIST…");
         live();
       }
     }
