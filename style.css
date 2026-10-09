@@ -268,7 +268,7 @@ background-size:180px 180px}
 
 /* article */
 .article-layout{display:grid;grid-template-columns:280px 1fr;gap:44px;padding-top:130px;align-items:start}
-@media(max-width:960px){.article-layout{grid-template-columns:1fr}}
+@media(max-width:960px){.article-layout{grid-template-columns:1fr}.toc{position:static}}
 .toc{position:sticky;top:96px;border:1px solid var(--ligne);border-radius:var(--r);padding:22px;background:var(--carte);transition:background-color .4s ease,border-color .4s ease}
 .toc a{display:block;padding:8px 0;font-size:13px;opacity:.65;border-left:2px solid transparent;padding-left:12px;transition:opacity .25s,color .25s,border-color .25s,padding-left .3s var(--ease)}
 .toc a:hover{padding-left:16px}
