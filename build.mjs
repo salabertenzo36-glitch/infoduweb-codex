@@ -11,7 +11,7 @@ await import("./legal.js");
 const { CATS, ALL } = globalThis.window;
 const LEGAL = globalThis.window.LEGAL;
 
-const SITE = "https://infoduweb-codex.pages.dev";
+const SITE = "https://infoduweb.pages.dev";
 const fmt = n => n.toLocaleString("fr-FR");
 const byId = id => ALL.find(a => a.id === id);
 const TOTAL = ALL.length;
