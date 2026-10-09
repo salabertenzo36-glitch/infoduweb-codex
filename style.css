@@ -370,6 +370,7 @@ footer{border-top:1px solid var(--ligne);margin-top:40px;background:var(--encre2
 .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:30px;padding:60px 28px 20px}
 @media(max-width:1100px){.foot-grid{grid-template-columns:1fr 1fr 1fr}}
 @media(max-width:860px){.foot-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.foot-grid{grid-template-columns:1fr;gap:26px}}
 .foot-logo{font-family:var(--serif);font-weight:900;font-size:28px}.foot-logo span{color:var(--accent)}
 .foot-brand p{opacity:.6;font-size:14px;line-height:1.6;margin:12px 0;max-width:340px}
 .foot-col{display:flex;flex-direction:column;gap:10px;font-size:14px}.foot-col a{opacity:.65}.foot-col a:hover{opacity:1;color:var(--accent)}
